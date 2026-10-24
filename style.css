@@ -1,0 +1,252 @@
+*{ 
+    margin: 0;
+    padding: 0;
+
+}
+html,body{
+    height:100%;
+    width: 100%;
+    background-color: #feebeb;
+}
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-inline: 1.5rem;
+}
+
+.notes-header {
+    padding-inline: 1.5rem;
+    margin-top: 2.5rem;
+}
+
+.notes-header h2 {
+    font-size: 3.5rem;
+    font-weight: 700;
+}
+.notes-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-inline: 1.5rem;
+    gap: 0.5rem;
+    margin-top: 2rem;
+}
+
+.search-bar {
+    flex: 1;
+    min-width: 0;
+    height: 3rem;
+    padding-inline: 1rem;
+    border: 1px solid #000000;
+    box-shadow: 3px 3px 0 #111;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+}
+
+.add-button {
+    background-color: #FFEB3B;
+    width: 3rem;
+    height: 3rem;
+    flex-shrink: 0;
+    border: 1px solid #000000;
+    box-shadow: 3px 3px 0 #111;
+    border-radius: 0.5rem;
+    font-size: 1.75rem;
+    cursor: pointer;
+}
+
+/* Tablet and desktop */
+@media (min-width: 768px) {
+    .notes-toolbar {
+        justify-content: flex-start;
+        gap: 1rem;
+    }
+
+    .search-bar {
+        flex: none;
+        width: 25%;
+    }
+}
+
+.notes-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-inline: 1.5rem;
+    margin-top: 2rem;
+}
+
+.notes-section h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.notes-sort {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.sort-icon {
+    width: 2.5rem;
+    height: 2rem;
+    fill: currentColor;
+    flex-shrink: 0;
+}
+
+.notes-filter {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #000000;
+    box-shadow: 3px 3px 0 #111;
+    border-radius: 0.5rem;
+    background-color: #fffcf6;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+/* Notes grid */
+.notes-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    padding: 1.5rem;
+}
+
+/* Individual note */
+.note-card {
+    display: flex;
+    flex-direction: column;
+    aspect-ratio: 1 / 1;
+    min-width: 0;
+    padding: 0.75rem;
+
+    background-color: #ffdf62;
+    color: #111;
+    border: 2px solid #111;
+    border-radius: 0.5rem;
+    box-shadow: 3px 3px 0 #111;
+}
+
+/* Part 1: Text preview — 50% of card height */
+.note-preview {
+    height: 50%;
+    width: 100%;
+    overflow: hidden;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    background-color: #fff8dc;
+    border: 2px solid #111;
+}
+
+.note-preview p {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5;
+    line-clamp: 5;
+    overflow: hidden;
+}
+
+/* Part 2: Title, language, and time */
+.note-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.5rem;
+
+    padding-block: 0.75rem;
+    min-width: 0;
+}
+
+.note-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+}
+
+.note-heading h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 800;
+    overflow-wrap: anywhere;
+}
+
+.note-language {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #49392c;
+    overflow-wrap: anywhere;
+}
+
+.note-time {
+    flex-shrink: 0;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-align: right;
+}
+
+/* Part 3: Edit and delete actions */
+.note-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+
+    margin-top: auto;
+    padding-top: 0.5rem;
+    border-top: 2px solid #111;
+}
+
+.note-actions button {
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #111;
+
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 800;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+}
+
+.note-actions button:hover {
+    opacity: 0.65;
+}
+
+.note-actions button:focus-visible {
+    outline: 2px solid #111;
+    outline-offset: 4px;
+}
+
+/* Tablet: 3 columns */
+@media (min-width: 600px) {
+    .notes-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+/* Desktop: 6 columns */
+@media (min-width: 1100px) {
+    .notes-grid {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 1rem;
+    }
+}
+
+/* Respect reduced motion and keep interactions simple */
+@media (prefers-reduced-motion: reduce) {
+    .note-actions button {
+        transition: none;
+    }
+}

@@ -178,19 +178,27 @@ html,body{
 }
 
 .note-preview p {
-    margin: 0;
-     font-family: "Space Mono", monospace;
+   margin: 0;
+    font-family: "Space Mono", monospace;
     font-weight: 400;
-    font-style: normal;
     font-size: 0.875rem;
     line-height: 1.5;
-    overflow-wrap: anywhere;
 
+    overflow-wrap: anywhere;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 5;
     line-clamp: 5;
     overflow: hidden;
+}
+/* Mobile view */
+@media (max-width: 600px) {
+    .note-preview p {
+        font-size: 0.75rem;
+        line-height: 1.4;
+        -webkit-line-clamp: 4;
+        line-clamp: 4;
+    }
 }
 
 /* Part 2: Title, language, and time */

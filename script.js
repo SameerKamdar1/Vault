@@ -67,13 +67,15 @@ function liveClock()
 setInterval(liveClock, 1000);
 
 /*Array of note cards */
-const notes = [{
-    id:1,
-    title: "Note 1",
-    content: "This is the content of note 1. It can be a long text that describes the note in detail.",
-    language: "#CSS",
-    date: "12:00 PM"
-}]
+let notes = [];
+/* Function to save notes to local storage */
+function saveNotes() {
+    localStorage.setItem("vaultNotes", JSON.stringify(notes));
+}
+/*Reloading the notes */
+const savedNotes = localStorage.getItem("vaultNotes");
+
+ notes = savedNotes ? JSON.parse(savedNotes) : [];
 
 /* Add button click event listener */
 const modalContainer = document.querySelector(".modal-container");
@@ -116,12 +118,81 @@ function openModal()
 </div>`;
 
 }
+
+function renderNotes() {
+    notesGrid.innerHTML = notes.map(note => `
+        <article class="note-card">
+            <div class="note-preview">
+                <p>${note.content}</p>
+            </div>
+            <div class="note-info">
+                <div class="note-heading">
+                    <h3>${note.title}</h3>
+                    <span class="note-language">${note.tag}</span>
+                </div>
+                <time class="note-time" datetime="${note.createdAt}">
+                    ${note.createdAt}
+                </time>
+            </div>
+            <div class="note-actions">
+                <button type="button" class="edit-button">Edit</button>
+                <button type="button" class="delete-button">Delete</button>
+            </div>
+        </article>
+    `).join("");
+}
       
 addButton.addEventListener("click", () => {
  openModal();
- const cancelButton = document.querySelector(".cancel-button");
+ 
+const modal = modalContainer.querySelector(".modal-overlay");
+const noteForm = modalContainer.querySelector(".note-form");
+
+const titleInput = modalContainer.querySelector(".note-title-input");
+const tagInput = modalContainer.querySelector(".note-tag-input");
+const contentInput = modalContainer.querySelector(".note-content-input");
+
+const cancelButton = modalContainer.querySelector(".cancel-button");
+const saveButton = modalContainer.querySelector(".save-button");
+/* Save button click event listener */
+saveButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    const title = titleInput.value.trim();
+    const tag = tagInput.value.trim();
+    const content = contentInput.value.trim();
+
+    /* Validate inputs */
+    if (title === "" || content === "")
+         {
+        alert("Title and content cannot be empty.");
+        return;
+        }
+    else
+         {
+
+        const note = {
+                    id: crypto.randomUUID(),
+                    title: titleInput.value.trim(),
+                    tag: tagInput.value.trim(),
+                    content: contentInput.value.trim(),
+                    createdAt: new Date().toLocaleDateString(),
+                    };
+                    
+                    notes.unshift(note);
+                    console.log(notes);
+                    saveNotes();
+        modalContainer.innerHTML = "";
+        renderNotes();
+    }
+
+    
+
+})
+
+/* Cancel button click event listener */
  cancelButton.addEventListener("click", () => {
      modalContainer.innerHTML = "";
  });
 
 })
+

@@ -298,3 +298,146 @@ html,body{
         transition: none;
     }
 }
+
+
+/* Dark overlay behind the form */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 1rem;
+    background-color: rgba(0, 0, 0, 0.45);
+}
+
+
+/* Main form */
+.note-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    width: 100%;
+    max-width: 400px;
+    height: min(600px, 85vh);
+
+    padding: 1.5rem;
+
+    background-color: #F8F2E6;
+    border: 2px solid #171717;
+    box-shadow: 6px 6px 0 #171717;
+}
+
+/* Title */
+.note-title-input {
+    width: 100%;
+    padding: 0.25rem 0;
+
+    border: none;
+    outline: none;
+    background: transparent;
+
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 2rem;
+    color: #171717;
+}
+
+.note-title-input::placeholder {
+    color: #9B907F;
+    opacity: 1;
+}
+
+/* Tag */
+.note-tag-input {
+    width: 100%;
+    padding: 0.25rem 0;
+
+    border: none;
+    outline: none;
+    background: transparent;
+
+    font-family: "Space Mono", monospace;
+    font-size: 0.75rem;
+    color: #171717;
+}
+
+.note-tag-input::placeholder {
+    color: #8A7F6D;
+}
+
+/* Main writing area */
+.note-content-input {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    padding: 0.5rem 0;
+
+    resize: none;
+    border: none;
+    outline: none;
+    background: transparent;
+
+    font-family: "Space Mono", monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: #171717;
+}
+
+.note-content-input::placeholder {
+    color: #8A7F6D;
+}
+
+/* Buttons */
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.cancel-button,
+.save-button {
+    padding: 0.4rem 0.75rem;
+
+    border: 1px solid #171717;
+    border-radius: 0.25rem;
+
+    font-family: "Space Mono", monospace;
+    font-size: 0.75rem;
+    cursor: pointer;
+}
+
+.cancel-button {
+    background-color: transparent;
+    color: #171717;
+}
+
+.save-button {
+    background-color: #FFEB3B;
+    color: #171717;
+    font-weight: 700;
+    box-shadow: 2px 2px 0 #171717;
+}
+
+.save-button:active {
+    transform: translate(2px, 2px);
+    box-shadow: none;
+}
+
+/* Small screens */
+@media (max-width: 480px) {
+    .note-form {
+        max-width: 340px;
+        height: min(560px, 85vh);
+        padding: 1.25rem;
+    }
+
+    .note-title-input {
+        font-size: 1.75rem;
+    }
+}
+

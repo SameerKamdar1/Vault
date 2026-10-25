@@ -40,6 +40,7 @@ const noteActions = document.querySelectorAll(".note-actions");
 const editButtons = document.querySelectorAll(".edit-button");
 const deleteButtons = document.querySelectorAll(".delete-button");
 
+/*Function for the working clock */
 function liveClock()
 {
  const now = new Date();
@@ -64,4 +65,63 @@ function liveClock()
     
 }
 setInterval(liveClock, 1000);
- 
+
+/*Array of note cards */
+const notes = [{
+    id:1,
+    title: "Note 1",
+    content: "This is the content of note 1. It can be a long text that describes the note in detail.",
+    language: "#CSS",
+    date: "12:00 PM"
+}]
+
+/* Add button click event listener */
+const modalContainer = document.querySelector(".modal-container");
+function openModal()
+{
+    modalContainer.innerHTML = `<div class="modal-overlay">
+    <form class="note-form">
+        <input
+            type="text"
+            class="note-title-input"
+            placeholder="Untitled Note"
+            aria-label="Note title"
+            required
+        >
+
+        <input
+            type="text"
+            class="note-tag-input"
+            placeholder="# Add a tag"
+            aria-label="Note tag"
+        >
+
+        <textarea
+            class="note-content-input"
+            placeholder="Start writing..."
+            aria-label="Note content"
+            required
+        ></textarea>
+
+        <div class="form-actions">
+            <button type="button" class="cancel-button">
+                Cancel
+            </button>
+
+            <button type="submit" class="save-button">
+                Save
+            </button>
+        </div>
+    </form>
+</div>`;
+
+}
+      
+addButton.addEventListener("click", () => {
+ openModal();
+ const cancelButton = document.querySelector(".cancel-button");
+ cancelButton.addEventListener("click", () => {
+     modalContainer.innerHTML = "";
+ });
+
+})

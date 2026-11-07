@@ -72,10 +72,6 @@ let notes = [];
 function saveNotes() {
     localStorage.setItem("vaultNotes", JSON.stringify(notes));
 }
-/*Reloading the notes */
-const savedNotes = localStorage.getItem("vaultNotes");
-
- notes = savedNotes ? JSON.parse(savedNotes) : [];
 
 /* Add button click event listener */
 const modalContainer = document.querySelector(".modal-container");
@@ -83,39 +79,39 @@ function openModal()
 {
     modalContainer.innerHTML = `<div class="modal-overlay">
     <form class="note-form">
-        <input
+    <input
             type="text"
             class="note-title-input"
             placeholder="Untitled Note"
             aria-label="Note title"
             required
-        >
-
-        <input
+            >
+            
+            <input
             type="text"
             class="note-tag-input"
             placeholder="# Add a tag"
             aria-label="Note tag"
-        >
-
+            >
+            
         <textarea
             class="note-content-input"
             placeholder="Start writing..."
             aria-label="Note content"
             required
-        ></textarea>
-
-        <div class="form-actions">
+            ></textarea>
+            
+            <div class="form-actions">
             <button type="button" class="cancel-button">
-                Cancel
+            Cancel
             </button>
-
+            
             <button type="submit" class="save-button">
-                Save
+            Save
             </button>
         </div>
-    </form>
-</div>`;
+        </form>
+        </div>`;
 
 }
 
@@ -123,7 +119,7 @@ function renderNotes() {
     notesGrid.innerHTML = notes.map(note => `
         <article class="note-card">
             <div class="note-preview">
-                <p>${note.content}</p>
+            <p>${note.content}</p>
             </div>
             <div class="note-info">
                 <div class="note-heading">
@@ -131,20 +127,20 @@ function renderNotes() {
                     <span class="note-language">${note.tag}</span>
                 </div>
                 <time class="note-time" datetime="${note.createdAt}">
-                    ${note.createdAt}
+                ${note.createdAt}
                 </time>
-            </div>
-            <div class="note-actions">
+                </div>
+                <div class="note-actions">
                 <button type="button" class="edit-button">Edit</button>
                 <button type="button" class="delete-button">Delete</button>
-            </div>
-        </article>
+                </div>
+                </article>
     `).join("");
 }
       
 addButton.addEventListener("click", () => {
- openModal();
- 
+    openModal();
+    
 const modal = modalContainer.querySelector(".modal-overlay");
 const noteForm = modalContainer.querySelector(".note-form");
 
@@ -160,39 +156,44 @@ saveButton.addEventListener("click", (event) => {
     const title = titleInput.value.trim();
     const tag = tagInput.value.trim();
     const content = contentInput.value.trim();
-
+    
     /* Validate inputs */
     if (title === "" || content === "")
          {
-        alert("Title and content cannot be empty.");
-        return;
-        }
-    else
-         {
-
-        const note = {
-                    id: crypto.randomUUID(),
+             alert("Title and content cannot be empty.");
+             return;
+            }
+            else
+                {
+                    
+                    const note = {
+                        id: crypto.randomUUID(),
                     title: titleInput.value.trim(),
                     tag: tagInput.value.trim(),
                     content: contentInput.value.trim(),
                     createdAt: new Date().toLocaleDateString(),
-                    };
-                    
-                    notes.unshift(note);
+                };
+                
+                notes.unshift(note);
                     console.log(notes);
                     saveNotes();
-        modalContainer.innerHTML = "";
-        renderNotes();
+                    modalContainer.innerHTML = "";
+                    renderNotes();
     }
-
     
-
+    
+    
 })
 
 /* Cancel button click event listener */
- cancelButton.addEventListener("click", () => {
-     modalContainer.innerHTML = "";
- });
+cancelButton.addEventListener("click", () => {
+    modalContainer.innerHTML = "";
+});
 
 })
 
+
+/*Reloading the notes */
+const savedNotes = localStorage.getItem("vaultNotes");
+
+ notes = savedNotes ? JSON.parse(savedNotes) : [], renderNotes();

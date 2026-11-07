@@ -117,7 +117,7 @@ function openModal()
 
 function renderNotes() {
     notesGrid.innerHTML = notes.map(note => `
-        <article class="note-card">
+        <article class="note-card" data-id="${note.id}">
             <div class="note-preview">
             <p>${note.content}</p>
             </div>
@@ -197,3 +197,78 @@ cancelButton.addEventListener("click", () => {
 const savedNotes = localStorage.getItem("vaultNotes");
 
  notes = savedNotes ? JSON.parse(savedNotes) : [], renderNotes();
+
+ /* Add click event listeners to each note card */
+
+ function openNoteModal(note) {
+
+    modalContainer.innerHTML = `
+        <div class="modal-overlay">
+            <form class="note-form">
+
+                <input
+                    type="text"
+                    class="note-title-input"
+                    placeholder="Untitled Note"
+                    aria-label="Note title"
+                    required
+                >
+
+                <input
+                    type="text"
+                    class="note-tag-input"
+                    placeholder="# Add a tag"
+                    aria-label="Note tag"
+                >
+
+                <textarea
+                    class="note-content-input"
+                    placeholder="Start writing..."
+                    aria-label="Note content"
+                    required
+                ></textarea>
+
+                <div class="form-actions">
+                    <button type="button" class="cancel-button">
+                        Cancel
+                    </button>
+
+                    <button type="submit" class="save-button">
+                        Save
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    `;
+
+    const titleInput = modalContainer.querySelector(".note-title-input");
+    const tagInput = modalContainer.querySelector(".note-tag-input");
+    const contentInput = modalContainer.querySelector(".note-content-input");
+
+    titleInput.value = note.title;
+    tagInput.value = note.tag;
+    contentInput.value = note.content;
+
+    const cancelButton = modalContainer.querySelector(".cancel-button");
+
+    cancelButton.addEventListener("click", () => {
+        modalContainer.innerHTML = "";
+    });
+
+}
+notesGrid.addEventListener("click", (event) => {
+
+    const card = event.target.closest(".note-card");
+
+    if (!card) return;
+
+    const noteId = card.dataset.id;
+
+    const selectedNote = notes.find(note => note.id === noteId);
+
+    if (!selectedNote) return;
+
+    openNoteModal(selectedNote);
+
+});

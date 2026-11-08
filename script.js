@@ -295,3 +295,15 @@ notesGrid.addEventListener("click", (event) => {
     openNoteModal(selectedNote);
 
 });
+
+/* Search functionality */
+searchBar.addEventListener("input", () => {
+    const searchTerm = searchBar.value.trim().toLowerCase();
+    const filteredNotes = notes.filter(note => {
+    // Check whether the note matches the search query
+   return note.title.toLowerCase().includes(searchTerm) ||
+    note.tag.toLowerCase().includes(searchTerm) ||
+    note.content.toLowerCase().includes(searchTerm)
+});
+    renderNotes(filteredNotes);
+});

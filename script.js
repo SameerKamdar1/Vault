@@ -206,6 +206,40 @@ saveButton.addEventListener("click", (event) => {
     }
     renderNotes(sortedNotes);
 }
+
+function getVisibleNotes() {
+
+  // Get the current search query
+  const searchTerm = searchBar.value.trim().toLowerCase();
+
+  // Filter notes according to the search query
+  const visibleNotes = notes.filter(note => {
+    return (
+      note.title.toLowerCase().includes(searchTerm) ||
+      (note.tag || "").toLowerCase().includes(searchTerm) ||
+      note.content.toLowerCase().includes(searchTerm)
+    );
+  });
+
+  // Sort the filtered notes by creation date
+  visibleNotes.sort((a, b) => {
+    return new Date(a.createdAtInMillis) -
+           new Date(b.createdAtInMillis);
+  });
+
+  // Display newest notes first when selected
+  if (notesFilter.value === "newest") {
+    visibleNotes.reverse();
+  }
+
+  return visibleNotes;
+}
+
+function refreshNotes() {
+  const visibleNotes = getVisibleNotes();
+  renderNotes(visibleNotes);
+}
+
 /*Reloading the notes */
 const savedNotes = localStorage.getItem("vaultNotes");
 
@@ -216,70 +250,104 @@ sortNotes();
 
 
 /* Add change event listener to the notes filter */
+
 notesFilter.addEventListener("change", () => {
-  
-    sortNotes();
+  refreshNotes();
 });
+
 
 /* Add click event listeners to each note card */
 
+
 function openNoteModal(note) {
-    
-    modalContainer.innerHTML = `
+  // Create the edit modal
+  modalContainer.innerHTML = `
     <div class="modal-overlay">
-    <form class="note-form">
-    
-    <input
-                    type="text"
-                    class="note-title-input"
-                    placeholder="Untitled Note"
-                    aria-label="Note title"
-                    required
-                    >
-                    
-                    <input
-                    type="text"
-                    class="note-tag-input"
-                    placeholder="# Add a tag"
-                    aria-label="Note tag"
-                >
-                
-                <textarea
-                class="note-content-input"
-                placeholder="Start writing..."
-                aria-label="Note content"
-                    required
-                    ></textarea>
-                    
-                    <div class="form-actions">
-                    <button type="button" class="cancel-button">
-                    Cancel
-                    </button>
-                    
-                    <button type="submit" class="save-button">
-                    Save
-                    </button>
-                </div>
-                
-            </form>
-            </div>
-    `;
-    
-    const titleInput = modalContainer.querySelector(".note-title-input");
-    const tagInput = modalContainer.querySelector(".note-tag-input");
-    const contentInput = modalContainer.querySelector(".note-content-input");
-    
-    titleInput.value = note.title;
-    tagInput.value = note.tag;
-    contentInput.value = note.content;
-    
-    const cancelButton = modalContainer.querySelector(".cancel-button");
-    
-    cancelButton.addEventListener("click", () => {
-        modalContainer.innerHTML = "";
-    });
-    
+      <form class="note-form">
+        <input
+          type="text"
+          class="note-title-input"
+          placeholder="Untitled Note"
+          aria-label="Note title"
+          required
+        >
+
+        <input
+          type="text"
+          class="note-tag-input"
+          placeholder="# Add a tag"
+          aria-label="Note tag"
+        >
+
+        <textarea
+          class="note-content-input"
+          placeholder="Start writing..."
+          aria-label="Note content"
+          required
+        ></textarea>
+
+        <div class="form-actions">
+          <button type="button" class="cancel-button">Cancel</button>
+          <button type="submit" class="save-button">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  `;
+
+  // Select the form elements
+  const noteForm = modalContainer.querySelector(".note-form");
+  const titleInput = modalContainer.querySelector(".note-title-input");
+  const tagInput = modalContainer.querySelector(".note-tag-input");
+  const contentInput = modalContainer.querySelector(".note-content-input");
+  const cancelButton = modalContainer.querySelector(".cancel-button");
+
+  // Populate inputs with existing note information
+  titleInput.value = note.title;
+  tagInput.value = note.tag || "";
+  contentInput.value = note.content;
+
+  // Close modal when Cancel is clicked
+  cancelButton.addEventListener("click", () => {
+    modalContainer.innerHTML = "";
+  });
+
+  // Handle editing and saving
+  noteForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const updatedTitle = titleInput.value.trim();
+    const updatedTag = tagInput.value.trim();
+    const updatedContent = contentInput.value.trim();
+
+    if (updatedTitle === "" || updatedContent === "") {
+      alert("Title and content cannot be empty.");
+      return;
+    }
+
+    // Find the position of the existing note
+    const noteIndex = notes.findIndex(item => item.id === note.id);
+
+    if (noteIndex === -1) {
+      return;
+    }
+
+    // Update the existing note
+    notes[noteIndex].title = updatedTitle;
+    notes[noteIndex].tag = updatedTag;
+    notes[noteIndex].content = updatedContent;
+
+    // Record when the note was edited
+    notes[noteIndex].updatedAt = new Date().toISOString();
+
+    // Save changes
+    saveNotes();
+
+    // Close modal and refresh notes
+    modalContainer.innerHTML = "";
+    renderNotes();
+  });
 }
+
 /* Delete confirmation modal */
 function confirmDelete(noteId) {
 
@@ -311,10 +379,13 @@ cancelButton.addEventListener("click", () => {
 
 const confirmButton = modalContainer.querySelector(".confirm-delete");
 confirmButton.addEventListener("click", () => {
-    notes = notes.filter(note => note.id !== noteId);
-    saveNotes();
-    modalContainer.innerHTML = "";
-    sortNotes();
+   notes = notes.filter(note => note.id !== noteId);
+
+saveNotes();
+
+modalContainer.innerHTML = "";
+
+refreshNotes();
 });
 
 }
@@ -331,8 +402,18 @@ notesGrid.addEventListener("click", (event) => {
      confirmDelete(noteId);
     return;
 }
+ // Edit functionality
+  if (editButton) {
+    const selectedNote = notes.find(note => note.id === noteId);
 
+    if (!selectedNote) return;
 
+    openNoteModal(selectedNote);
+    return;
+  }
+
+  // Open note when clicking elsewhere on the card
+  
     const selectedNote = notes.find(note => note.id === noteId);
 
     if (!selectedNote) return;
@@ -342,14 +423,9 @@ notesGrid.addEventListener("click", (event) => {
 });
 
 /* Search functionality */
+
 searchBar.addEventListener("input", () => {
-    const searchTerm = searchBar.value.trim().toLowerCase();
-    const filteredNotes = notes.filter(note => {
-    // Check whether the note matches the search query
-   return note.title.toLowerCase().includes(searchTerm) ||
-    note.tag.toLowerCase().includes(searchTerm) ||
-    note.content.toLowerCase().includes(searchTerm)
+  refreshNotes();
 });
-    renderNotes(filteredNotes);
-});
+
 

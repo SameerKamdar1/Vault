@@ -115,8 +115,8 @@ function openModal()
 
 }
 
-function renderNotes() {
-    notesGrid.innerHTML = notes.map(note => `
+function renderNotes(notesToRender = notes) {
+    notesGrid.innerHTML = notesToRender.map(note => `
         <article class="note-card" data-id="${note.id}">
             <div class="note-preview">
             <p>${note.content}</p>
@@ -172,6 +172,7 @@ saveButton.addEventListener("click", (event) => {
                     tag: tagInput.value.trim(),
                     content: contentInput.value.trim(),
                     createdAt: new Date().toLocaleDateString(),
+                    createdAtInMillis: new Date().toISOString()
                 };
                 
                 notes.unshift(note);
@@ -193,10 +194,32 @@ cancelButton.addEventListener("click", () => {
 })
 
 
+/* Sorting the notes */
+
+function sortNotes() {
+   const sortedNotes = [...notes];
+   sortedNotes.sort((a, b) =>
+   new Date(a.createdAtInMillis) - new Date(b.createdAtInMillis)
+);
+if (notesFilter.value === "newest") {
+   sortedNotes.reverse();
+}
+renderNotes(sortedNotes);
+}
 /*Reloading the notes */
 const savedNotes = localStorage.getItem("vaultNotes");
 
  notes = savedNotes ? JSON.parse(savedNotes) : [], renderNotes();
+    notesFilter.value = "newest"
+    sortNotes();
+
+
+
+ /* Add change event listener to the notes filter */
+ notesFilter.addEventListener("change", () => {
+  
+    sortNotes();
+});
 
  /* Add click event listeners to each note card */
 

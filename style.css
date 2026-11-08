@@ -441,3 +441,38 @@ html,body{
     }
 }
 
+/* Delete confirmation modal */
+.delete-modal {
+    width: min(350px, 90%);
+    padding: 25px;
+    background: #F8F2E6;
+    border: 2px solid black;
+    box-shadow: 6px 6px 0 black;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    font-family: "Space Mono", monospace;
+}
+
+.delete-modal p {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.delete-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.delete-actions button {
+    padding: 8px 15px;
+    border: 2px solid black;
+    background: white;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.confirm-delete {
+    background: #F5C94E !important;
+}

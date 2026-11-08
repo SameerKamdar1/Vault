@@ -43,16 +43,16 @@ const deleteButtons = document.querySelectorAll(".delete-button");
 /*Function for the working clock */
 function liveClock()
 {
- const now = new Date();
+    const now = new Date();
     let period = "";
     let hours = now.getHours().toString().padStart(2, '0');
     if(hours >= 12)
-    {
-        period = "PM";
-      
+        {
+            period = "PM";
+            
     }
     else
-    {
+        {
         period = "AM";
     }
     if(hours>12)
@@ -80,39 +80,39 @@ function openModal()
     modalContainer.innerHTML = `<div class="modal-overlay">
     <form class="note-form">
     <input
-            type="text"
-            class="note-title-input"
-            placeholder="Untitled Note"
-            aria-label="Note title"
-            required
-            >
-            
-            <input
-            type="text"
-            class="note-tag-input"
-            placeholder="# Add a tag"
-            aria-label="Note tag"
-            >
-            
-        <textarea
-            class="note-content-input"
-            placeholder="Start writing..."
-            aria-label="Note content"
-            required
-            ></textarea>
-            
-            <div class="form-actions">
-            <button type="button" class="cancel-button">
-            Cancel
-            </button>
-            
-            <button type="submit" class="save-button">
-            Save
-            </button>
-        </div>
-        </form>
-        </div>`;
-
+    type="text"
+    class="note-title-input"
+    placeholder="Untitled Note"
+    aria-label="Note title"
+    required
+    >
+    
+    <input
+    type="text"
+    class="note-tag-input"
+    placeholder="# Add a tag"
+    aria-label="Note tag"
+    >
+    
+    <textarea
+    class="note-content-input"
+    placeholder="Start writing..."
+    aria-label="Note content"
+    required
+    ></textarea>
+    
+    <div class="form-actions">
+    <button type="button" class="cancel-button">
+    Cancel
+    </button>
+    
+    <button type="submit" class="save-button">
+    Save
+    </button>
+    </div>
+    </form>
+    </div>`;
+    
 }
 
 function renderNotes(notesToRender = notes) {
@@ -122,27 +122,27 @@ function renderNotes(notesToRender = notes) {
             <p>${note.content}</p>
             </div>
             <div class="note-info">
-                <div class="note-heading">
-                    <h3>${note.title}</h3>
-                    <span class="note-language">${note.tag}</span>
-                </div>
-                <time class="note-time" datetime="${note.createdAt}">
-                ${note.createdAt}
-                </time>
-                </div>
-                <div class="note-actions">
-                <button type="button" class="edit-button">Edit</button>
-                <button type="button" class="delete-button">Delete</button>
-                </div>
-                </article>
-    `).join("");
-}
-      
-addButton.addEventListener("click", () => {
-    openModal();
-    
-const modal = modalContainer.querySelector(".modal-overlay");
-const noteForm = modalContainer.querySelector(".note-form");
+            <div class="note-heading">
+            <h3>${note.title}</h3>
+            <span class="note-language">${note.tag}</span>
+            </div>
+            <time class="note-time" datetime="${note.createdAt}">
+            ${note.createdAt}
+            </time>
+            </div>
+            <div class="note-actions">
+            <button type="button" class="edit-button">Edit</button>
+                    <button type="button" class="delete-button">Delete</button>
+                    </div>
+                    </article>
+                    `).join("");
+                }
+                
+                addButton.addEventListener("click", () => {
+                openModal();
+                
+                const modal = modalContainer.querySelector(".modal-overlay");
+                const noteForm = modalContainer.querySelector(".note-form");
 
 const titleInput = modalContainer.querySelector(".note-title-input");
 const tagInput = modalContainer.querySelector(".note-tag-input");
@@ -168,125 +168,170 @@ saveButton.addEventListener("click", (event) => {
                     
                     const note = {
                         id: crypto.randomUUID(),
-                    title: titleInput.value.trim(),
-                    tag: tagInput.value.trim(),
-                    content: contentInput.value.trim(),
-                    createdAt: new Date().toLocaleDateString(),
-                    createdAtInMillis: new Date().toISOString()
-                };
-                
-                notes.unshift(note);
+                        title: titleInput.value.trim(),
+                        tag: tagInput.value.trim(),
+                        content: contentInput.value.trim(),
+                        createdAt: new Date().toLocaleDateString(),
+                        createdAtInMillis: new Date().toISOString()
+                    };
+                    
+                    notes.unshift(note);
                     console.log(notes);
                     saveNotes();
                     modalContainer.innerHTML = "";
                     renderNotes();
+                }
+                
+                
+                
+            })
+            
+            /* Cancel button click event listener */
+            cancelButton.addEventListener("click", () => {
+            modalContainer.innerHTML = "";
+        });
+        
+    })
+    
+    
+    /* Sorting the notes */
+    
+    function sortNotes() {
+        const sortedNotes = [...notes];
+        sortedNotes.sort((a, b) =>
+            new Date(a.createdAtInMillis) - new Date(b.createdAtInMillis)
+    );
+    if (notesFilter.value === "newest") {
+        sortedNotes.reverse();
     }
-    
-    
-    
-})
-
-/* Cancel button click event listener */
-cancelButton.addEventListener("click", () => {
-    modalContainer.innerHTML = "";
-});
-
-})
-
-
-/* Sorting the notes */
-
-function sortNotes() {
-   const sortedNotes = [...notes];
-   sortedNotes.sort((a, b) =>
-   new Date(a.createdAtInMillis) - new Date(b.createdAtInMillis)
-);
-if (notesFilter.value === "newest") {
-   sortedNotes.reverse();
-}
-renderNotes(sortedNotes);
+    renderNotes(sortedNotes);
 }
 /*Reloading the notes */
 const savedNotes = localStorage.getItem("vaultNotes");
 
- notes = savedNotes ? JSON.parse(savedNotes) : [], renderNotes();
-    notesFilter.value = "newest"
-    sortNotes();
+notes = savedNotes ? JSON.parse(savedNotes) : [], renderNotes();
+notesFilter.value = "newest"
+sortNotes();
 
 
 
- /* Add change event listener to the notes filter */
- notesFilter.addEventListener("change", () => {
+/* Add change event listener to the notes filter */
+notesFilter.addEventListener("change", () => {
   
     sortNotes();
 });
 
- /* Add click event listeners to each note card */
+/* Add click event listeners to each note card */
 
- function openNoteModal(note) {
-
+function openNoteModal(note) {
+    
     modalContainer.innerHTML = `
-        <div class="modal-overlay">
-            <form class="note-form">
-
-                <input
+    <div class="modal-overlay">
+    <form class="note-form">
+    
+    <input
                     type="text"
                     class="note-title-input"
                     placeholder="Untitled Note"
                     aria-label="Note title"
                     required
-                >
-
-                <input
+                    >
+                    
+                    <input
                     type="text"
                     class="note-tag-input"
                     placeholder="# Add a tag"
                     aria-label="Note tag"
                 >
-
+                
                 <textarea
-                    class="note-content-input"
-                    placeholder="Start writing..."
-                    aria-label="Note content"
+                class="note-content-input"
+                placeholder="Start writing..."
+                aria-label="Note content"
                     required
-                ></textarea>
-
-                <div class="form-actions">
+                    ></textarea>
+                    
+                    <div class="form-actions">
                     <button type="button" class="cancel-button">
-                        Cancel
+                    Cancel
                     </button>
-
+                    
                     <button type="submit" class="save-button">
-                        Save
+                    Save
                     </button>
                 </div>
-
+                
             </form>
-        </div>
+            </div>
     `;
-
+    
     const titleInput = modalContainer.querySelector(".note-title-input");
     const tagInput = modalContainer.querySelector(".note-tag-input");
     const contentInput = modalContainer.querySelector(".note-content-input");
-
+    
     titleInput.value = note.title;
     tagInput.value = note.tag;
     contentInput.value = note.content;
-
+    
     const cancelButton = modalContainer.querySelector(".cancel-button");
-
+    
     cancelButton.addEventListener("click", () => {
         modalContainer.innerHTML = "";
     });
+    
+}
+/* Delete confirmation modal */
+function confirmDelete(noteId) {
+
+    modalContainer.innerHTML = `
+        <div class="modal-overlay">
+            <div class="delete-modal">
+
+                <p>Do you want to delete this note?</p>
+
+                <div class="delete-actions">
+                    <button type="button" class="cancel-delete">
+                        Cancel
+                    </button>
+
+                    <button type="button" class="confirm-delete">
+                        Delete
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    `;
+
+    const cancelButton = modalContainer.querySelector(".cancel-delete");
+
+cancelButton.addEventListener("click", () => {
+    modalContainer.innerHTML = "";
+});
+
+const confirmButton = modalContainer.querySelector(".confirm-delete");
+confirmButton.addEventListener("click", () => {
+    notes = notes.filter(note => note.id !== noteId);
+    saveNotes();
+    modalContainer.innerHTML = "";
+    sortNotes();
+});
 
 }
 notesGrid.addEventListener("click", (event) => {
-
+    
     const card = event.target.closest(".note-card");
-
+    const deleteButton = event.target.closest(".delete-button");
+    const editButton = event.target.closest(".edit-button");
+    
     if (!card) return;
-
+    
     const noteId = card.dataset.id;
+    if (deleteButton) {
+     confirmDelete(noteId);
+    return;
+}
+
 
     const selectedNote = notes.find(note => note.id === noteId);
 
@@ -307,3 +352,4 @@ searchBar.addEventListener("input", () => {
 });
     renderNotes(filteredNotes);
 });
+
